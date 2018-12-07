@@ -110,7 +110,7 @@ bool RuntimeInfo::checkCompatibility(const CompatibilityMatrix& mat, std::string
         }
         return false;
     }
-    if (kernelSepolicyVersion() != mat.framework.mSepolicy.kernelSepolicyVersion()) {
+    if (kernelSepolicyVersion() < mat.framework.mSepolicy.kernelSepolicyVersion()) {
         if (error != nullptr) {
             *error = "kernelSepolicyVersion = " + to_string(kernelSepolicyVersion())
                      + " but required " + to_string(mat.framework.mSepolicy.kernelSepolicyVersion());
@@ -121,8 +121,8 @@ bool RuntimeInfo::checkCompatibility(const CompatibilityMatrix& mat, std::string
     // mat.mSepolicy.sepolicyVersion() is checked against static
     // HalManifest.device.mSepolicyVersion in HalManifest::checkCompatibility.
 
-    bool foundMatchedKernelVersion = false;
-    bool foundMatchedConditions = false;
+    bool foundMatchedKernelVersion = true;
+    bool foundMatchedConditions = true;
     for (const MatrixKernel& matrixKernel : mat.framework.mKernels) {
         if (!matchKernelVersion(matrixKernel.minLts())) {
             continue;
